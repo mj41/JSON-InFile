@@ -67,10 +67,12 @@ sub save {
 	my ( $self, $struct, %args ) = @_;
 	$args{save_if_changed} //= 1;
 
-	my $fpath = $self->fpath;
+	croak "Only ref to HASH or ref to ARRAY can be saved.\n"
+		unless (ref $struct eq 'HASH') || (ref $struct eq 'ARRAY' );
 
 	my $json = $self->struct2json( $struct );
 
+	my $fpath = $self->fpath;
 	# file exists
 	if ( -f $fpath ) {
 		# check if changedd
