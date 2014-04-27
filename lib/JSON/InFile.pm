@@ -41,7 +41,6 @@ sub load_json {
     my $fpath = $self->fpath;
     croak "File '$fpath' not found.\n" unless -f $fpath;
 
-	print "Loading file struct from '$fpath'.\n" if $self->{vl} >= 4;
 	my $json;
     {
 		local $/;
@@ -54,6 +53,7 @@ sub load_json {
 
 sub load {
     my ( $self ) = @_;
+	print "Loading struct from file '".$self->fpath()."'.\n" if $self->{vl} >= 4;
     my $json = $self->load_json();
     return $self->json2struct($json);
 }
