@@ -59,8 +59,9 @@ sub load {
 }
 
 sub struct2json {
-	my ( $self, $struct ) = @_;
-	return $self->json_obj->encode( $struct );
+	my ( $self, $struct, $sort ) = @_;
+	return $self->json_obj->canonical(1)->encode( $struct ) if $sort;
+	return $self->json_obj->canonical(0)->encode( $struct );
 }
 
 sub save {
@@ -70,7 +71,8 @@ sub save {
 	croak "Only ref to HASH or ref to ARRAY can be saved.\n"
 		unless (ref $struct eq 'HASH') || (ref $struct eq 'ARRAY' );
 
-	my $json = $self->struct2json( $struct );
+	my $sort = ( $args{save_if_changed} || $args{sort} );
+	my $json = $self->struct2json( $struct, $sort );
 
 	my $fpath = $self->fpath;
 	# file exists
